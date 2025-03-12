@@ -1,15 +1,18 @@
-import { Body, Controller, Get, Post, Request } from '@nestjs/common';
+import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
-import { Public } from './decorators/public.decorator';
+import { SkipDefaultAuth } from './decorators/skip-default-auth.decorator';
 @Controller('auth')
 export class AuthController {
-  constructor(private AuthService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-  @Public()
+  @SkipDefaultAuth()
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.AuthService.signIn(signInDto.username, signInDto.password);
+  async login(@Request() req) {
+    return this.authService.login(req.user);
   }
+
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;

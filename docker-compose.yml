@@ -5,13 +5,13 @@ services:
       dockerfile: Dockerfile
       target: dev
     ports:
-      - "3001:3001"
+      - "3000:3000"
     volumes:
       - ./backend:/app
       - node_modules_backend:/app/node_modules/
     environment:
       - JWT_SECRET
-      - JWT_TOKEN_EXPIRATION
+      - JWT_EXPIRES_IN
     restart: on-failure
 
   frontend:
@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
       target: dev
     ports:
-      - "3000:3000"
+      - "3001:3001"
     volumes:
       - ./frontend:/app
       - node_modules_frontend:/app/node_modules/

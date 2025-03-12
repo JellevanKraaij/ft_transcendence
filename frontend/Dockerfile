@@ -16,7 +16,7 @@ RUN npm ci
 COPY --chown=node:node . .
 
 # Start the development server
-CMD ["npm", "run", "dev", "--", "-p 3000"]
+CMD ["npm", "run", "dev", "--", "-p 3001"]
 
 #
 # 🏡 Production Buil
