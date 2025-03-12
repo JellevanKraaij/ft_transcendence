@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
 import { oauth42Constants } from '../constants';
+import { OAuth42User } from '../interfaces/oauth42-user.interface';
+import { AuthService } from '../auth.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class OAuth42Strategy extends PassportStrategy(Strategy, 'oauth42') {
-  constructor() {
+  constructor(private authService: AuthService) {
     super({
       clientID: oauth42Constants.clientID,
       clientSecret: oauth42Constants.clientSecret,
@@ -13,24 +16,21 @@ export class OAuth42Strategy extends PassportStrategy(Strategy, 'oauth42') {
       profileFields: {
         id: 'id',
         username: 'login',
-        displayName: 'displayname',
-        email: 'email',
         image: 'image.link',
       },
     });
   }
 
-  async validate(accessToken: string, refreshToken: string, profile: any) {
-    const user = {
-      oauth42Id: profile.id,
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+  ): Promise<Partial<User>> {
+    const user: OAuth42User = {
+      id: profile.id,
       username: profile.username,
-      displayName: profile.displayName,
-      email: profile.email,
       image: profile.image,
     };
-
-    // check or create user in your database
-    // return full user object
-    return user;
+    return this.authService.findOrCreateUserFromOAuth42(user);
   }
 }

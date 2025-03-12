@@ -19,6 +19,7 @@ RUN npm ci
 COPY --chown=node:node . .
 
 # RUN npx prisma generate
+RUN npx prisma generate
 
 # Start the development server
 CMD ["npm", "run", "start:dev"]
@@ -67,5 +68,5 @@ COPY --chown=node:node package.json package.json
 # Set Docker as non-root user
 USER node
 
-# CMD [  "npm", "run", "start:migrade:prod" ]
 CMD [  "npm", "run", "start:prod" ]
+# CMD [  "npm", "run", "start:prod" ]

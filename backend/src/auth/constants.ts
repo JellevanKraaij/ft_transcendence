@@ -8,3 +8,7 @@ export const oauth42Constants = {
   clientSecret: process.env.OAUTH42_CLIENT_SECRET,
   callbackURL: process.env.OAUTH42_REDIRECT_URI,
 };
+
+export const bcryptConstants = {
+  saltRounds: 10,
+};
