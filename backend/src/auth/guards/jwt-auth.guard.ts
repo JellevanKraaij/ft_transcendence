@@ -1,7 +1,6 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Observable } from 'rxjs';
 import { SKIP_DEFAULT_AUTH_KEY } from '../decorators/skip-default-auth.decorator';
 
 @Injectable()

@@ -11,7 +11,10 @@ services:
       - node_modules_backend:/app/node_modules/
     environment:
       - JWT_SECRET
-      - JWT_EXPIRES_IN
+      - OAUTH42_CLIENT_ID
+      - OAUTH42_CLIENT_SECRET
+      - OAUTH42_REDIRECT_URI
+
     restart: on-failure
 
   frontend:
