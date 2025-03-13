@@ -1,15 +1,15 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { OAuth42User } from './types/oauth42-user.type';
-import { UserWoPass } from '../users/types/user-wo-pass.type';
+import { UserWoPass } from '../user/types/user-wo-pass.type';
 import * as bcrypt from 'bcryptjs';
 import { bcryptConstants } from './constants';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private usersService: UserService,
     private jwtService: JwtService,
   ) {}
 

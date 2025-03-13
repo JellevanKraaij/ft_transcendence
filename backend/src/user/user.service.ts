@@ -4,7 +4,7 @@ import { User, Prisma } from '@prisma/client';
 import { UserWoPass } from './types/user-wo-pass.type';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async user(

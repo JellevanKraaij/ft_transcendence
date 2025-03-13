@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { SkipDefaultAuth } from './decorators/skip-default-auth.decorator';
 import { OAuth42AuthGuard } from './guards/oauth42-auth.guard';
 import { RegisterDto as RegisterUserDto } from './dtos/registerUser.dto';
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -32,6 +33,7 @@ export class AuthController {
 
   @Post('refresh')
   async refresh(@Request() req) {
+    // DefaultAuthGuard will handle the authentication
     return this.authService.refresh(req.user);
   }
 
@@ -47,10 +49,5 @@ export class AuthController {
   @UseGuards(OAuth42AuthGuard)
   async oauth42LoginCallback(@Request() req) {
     return this.authService.login(req.user);
-  }
-
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }
