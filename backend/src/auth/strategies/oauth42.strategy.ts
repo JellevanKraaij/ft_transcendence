@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
 import { oauth42Constants } from '../constants';
-import { OAuth42User } from '../interfaces/oauth42-user.interface';
+import { OAuth42User } from '../types/oauth42-user.type';
 import { AuthService } from '../auth.service';
 import { User } from '@prisma/client';
 

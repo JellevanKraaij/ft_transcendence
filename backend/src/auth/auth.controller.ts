@@ -30,6 +30,11 @@ export class AuthController {
     return this.authService.register(user.username, user.password);
   }
 
+  @Post('refresh')
+  async refresh(@Request() req) {
+    return this.authService.refresh(req.user);
+  }
+
   @Get('oauth42')
   @SkipDefaultAuth()
   @UseGuards(OAuth42AuthGuard)

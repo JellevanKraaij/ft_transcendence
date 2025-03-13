@@ -1,8 +1,8 @@
-import { ConflictException, Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
-import { OAuth42User } from './interfaces/oauth42-user.interface';
+import { OAuth42User } from './types/oauth42-user.type';
+import { UserWoPass } from '../users/types/user-wo-pass.type';
 import * as bcrypt from 'bcryptjs';
 import { bcryptConstants } from './constants';
 
@@ -16,7 +16,7 @@ export class AuthService {
   async validateLocalUser(
     username: string,
     password: string,
-  ): Promise<Omit<User, 'password'> | null> {
+  ): Promise<UserWoPass | null> {
     if (!username || !password) {
       return null;
     }
@@ -33,15 +33,20 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User): Promise<{ access_token: string }> {
+  async login(user: UserWoPass): Promise<{ access_token: string }> {
     return {
       access_token: this.jwtService.sign({ sub: user.id, ...user }),
     };
   }
 
+  async refresh(user: UserWoPass): Promise<{ access_token: string }> {
+    const new_user = await this.usersService.user({ id: user.id });
+    return this.login(new_user);
+  }
+
   async findOrCreateUserFromOAuth42(
     oauth42User: OAuth42User,
-  ): Promise<Omit<User, 'password'>> {
+  ): Promise<UserWoPass> {
     const user = await this.usersService.user({ oauth42Id: oauth42User.id });
     if (!user) {
       const user = await this.usersService.createUser({
@@ -64,18 +69,12 @@ export class AuthService {
     return user;
   }
 
-  async register(
-    username: string,
-    pass: string,
-  ): Promise<Omit<User, 'password'>> {
-    Logger.log(`Registering user: ${username}`);
+  async register(username: string, pass: string): Promise<UserWoPass> {
     const hashedPassword = await bcrypt.hash(pass, bcryptConstants.saltRounds);
-    Logger.log(`Hashed password: ${hashedPassword}`);
     const user = await this.usersService.createUser({
       username,
       password: hashedPassword,
     });
-    const { password, ...result } = user;
-    return result;
+    return user;
   }
 }
